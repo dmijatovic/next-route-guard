@@ -1,13 +1,25 @@
 .container {
   min-height: 100vh;
-  padding: 0 0.5rem;
+  padding: 1rem 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.header{
+  width:100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header nav a{
+  padding: 1rem;
+}
+
 .main {
+  width:100%;
   padding: 5rem 0;
   flex: 1;
   display: flex;
@@ -33,6 +45,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+a.active{
+  color: #0070f3;
 }
 
 .title a {

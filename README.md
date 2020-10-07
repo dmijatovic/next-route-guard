@@ -1,30 +1,64 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Route guard example with NextJS and msal.js (Azure AD)
 
-## Getting Started
+This sample experiments with custom route guard possiblities using next/router and msal.js library for Azure AD using OpenID Connect protocol.
 
-First, run the development server:
+Next router can listen to route changes. Based on this info we can guard the routes. But if the page is rendered staticaly could I access the content of the page? Let's test this!
 
-```bash
-npm run dev
-# or
-yarn dev
+## Dependencies
+
+The main dependency is msal.js library. The library is added in the header of the document template (see pages/\_document.tsx).
+
+## Implementation
+
+The authentication component and useAuth hook are in auth folder. The route protecting component is added to \_app.js template page.
+
+```javascript
+import { AuthProvider } from "../auth/AuthProvider";
+function MyApp({ Component, pageProps }) {
+  return (
+    <AuthProvider>
+      <Component {...pageProps} />
+    </AuthProvider>
+  );
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+To obtain user information (tokens) received from Azure AD use the hook `useAuth` (see page/dashboard.js).
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```javascript
+import { useAuth } from "../auth/AuthProvider";
 
-## Learn More
+export default function Dashboard() {
+  const router = useRouter();
+  const { user } = useAuth();
+  return (
+    <>
+      <Head>
+        <title>Router guard: Dashboard page</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <PageLayout>
+        {user ? (
+          <>
+            <h1>This is PROTECTED DASHBOARD PAGE!</h1>
+            <h3>User: {user["idTokenClaims"]["name"]}</h3>
+            <button
+              onClick={() => {
+                router.push("/logout");
+              }}
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <h1>401 - Protected</h1>
+        )}
+      </PageLayout>
+    </>
+  );
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Configuration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The configuration is in this example is placed in .env file and in the auth/config.ts file. For the production all configuration variables should be moved into .env file. This will allow for more flexibility and reusability.

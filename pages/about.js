@@ -2,15 +2,15 @@ import Head from 'next/head'
 
 import PageLayout from '../components/PageLayout'
 
-export default function Home() {
+export default function About() {
   return (
     <>
     <Head>
-      <title>Router guard: Home page</title>
+      <title>Router guard: About page</title>
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <PageLayout>
-      <h1>This is test for main content!</h1>
+      <h1>This is ABOUT PAGE!</h1>
     </PageLayout>
     </>
   )
