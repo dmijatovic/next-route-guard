@@ -82,3 +82,39 @@ export default function Dashboard() {
 ## Configuration
 
 The configuration is in this example is placed in .env file and in the auth/config.ts file. For the production all configuration variables should be moved into .env file. This will allow for more flexibility and reusability.
+
+## Testing with Jest and react-test library
+
+Setup testing with NextJs is [based on this article](https://medium.com/frontend-digest/setting-up-testing-library-with-nextjs-a9702cbde32d).
+
+- install dependencies Jest and react testing library
+
+```bash
+npm i -D jest jest-dom @testing-library/react @testing-library/jest-dom @testing-library/dom babel-jest
+```
+
+- create setupTests.js file with content
+
+```javascript
+import "@testing-library/jest-dom/extend-expect";
+```
+
+- create .babelrc file with content
+
+```json
+{
+  "presets": ["next/babel"]
+}
+```
+
+- create jest.config.js file with content
+
+```javascript
+module.exports = {
+  testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
+  setupFilesAfterEnv: ["<rootDir>/setupTests.js"],
+  transform: {
+    "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+  },
+};
+```
