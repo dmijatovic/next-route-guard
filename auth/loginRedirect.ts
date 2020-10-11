@@ -1,4 +1,3 @@
-import {useState, useEffect} from "react";
 import {msalConfig, userConfig} from './config'
 import logger, {LogType} from 'utils/logger'
 
@@ -47,33 +46,12 @@ export function getAllAccounts(){
 }
 
 /**
- * Redirect user to AzureAD for login.
- */
-export function redirectForLogin(src:string):Promise<[any,string]>{
-  return msalClient.handleRedirectPromise()
-  .then(tokens=>{
-    if (tokens!==null){
-      return [tokens, undefined]
-    }else if (src!=="msal"){
-      //start redirect if we are
-      //not back to msal page
-      msalClient.loginRedirect({
-        ...userConfig
-      })
-    }
-  })
-  .catch(e => {
-    debugger
-    // console.error("loginRedirect...ERROR: ",e)
-    logger(`${e.message}`,LogType.error)
-    //clear remaining vars MSAL might leave there
-    localStorage.clear()
-    return [undefined, e.message]
-  })
-}
-
-/**
- * Handle redirect promise
+ * Handle redirect promise. This function is used
+ * on redirect page to continue authentication process.
+ * After calling this method msal will resume already
+ * stared authentication process and it will redirect
+ * back to the page from where the request was started.
+ * (in this example these could be profile or dashboard page)
  */
 export function handleRedirectPromise(){
   msalClient.handleRedirectPromise()
