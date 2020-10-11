@@ -1,13 +1,15 @@
-
-import {AuthProvider} from '../auth/AuthProvider'
-
 import '../styles/globals.css'
+
+import {CreateRouteGuard} from '../auth/RouteGuard'
+import isProtected from '../auth/isRouteProtected'
+
+const RouteGuard = CreateRouteGuard(isProtected)
 
 function MyApp({ Component, pageProps }) {
   return (
-    <AuthProvider>
+    <RouteGuard>
       <Component {...pageProps} />
-    </AuthProvider>
+    </RouteGuard>
   )
 }
 

@@ -1,62 +1,82 @@
-# Route guard example with NextJS and msal.js (Azure AD)
+# User access management demo with NextJS and msal.js (Azure AD)
 
-This sample experiments with custom route guard possiblities using next/router and msal.js library for Azure AD using OpenID Connect protocol.
+This repo contains examples of route and role guard React components. It uses next/router, jwt_decode and msal.js. MSAL handles Azure AD authentication using OpenID Connect protocol.
 
-Next router can listen to route changes. Based on this info we can guard the routes. But if the page is rendered staticaly could I access the content of the page? Let's test this!
+Next router is used to listen to route changes. Based on this info we guard the routes. The decision which route is guarded is delegated to isRouteProtected method which is passed to CreateRouteGuard upon route guard creation. In this example the router guard is implemented in the app template (pages/\_app.js).
+
+RoleGuard componet regulates the content on the page based on user role. Allowed role is passed to RoleGuard component upon creation. Example use is shown in the dashboard page.
+
+All relevant code concerning authentication and authorisation using MSAL is in auth folder.
+The example implementations are in the profile and dashboard pages (pages/profile.js and pages/dashboard.js)
 
 ## Dependencies
 
-The main dependency is msal.js library. The library is added in the header of the document template (see pages/\_document.tsx).
+The main dependency is `msal.js` for authentication and route guard. `jwt_decode` library is used for role guard to decode access token.
+
+MSAL library is added in the header of the document template (see pages/\_document.tsx). This is done to avoid "window undefined" error with NextJS SSR.
 
 ## Implementation
 
-The authentication component and useAuth hook are in auth folder. The route protecting component is added to \_app.js template page.
+### Route guard
+
+The route guard component and useAuthContext hook are in auth folder. The route protecting component is added to pages/\_app.js (template) page.
 
 ```javascript
-import { AuthProvider } from "../auth/AuthProvider";
+import { CreateRouteGuard } from "../auth/RouteGuard";
+import isProtected from "../auth/isRouteProtected";
+
+const RouteGuard = CreateRouteGuard(isProtected);
+
 function MyApp({ Component, pageProps }) {
   return (
-    <AuthProvider>
+    <RouteGuard>
       <Component {...pageProps} />
-    </AuthProvider>
+    </RouteGuard>
   );
+}
+
+export default MyApp;
+```
+
+To obtain user information (tokens) received from Azure AD use the hook `useAuthContext` (see page/profile.js).
+
+```javascript
+import { useAuthContext } from "../auth/RouteGuard";
+
+export default function Dashboard() {
+  // get user/tokens from authContext
+  const { user } = useAuthContext();
+  //...REST
 }
 ```
 
-To obtain user information (tokens) received from Azure AD use the hook `useAuth` (see page/dashboard.js).
+### Role guard
+
+Role guard component is implemented in dashboard page.
 
 ```javascript
-import { useAuth } from "../auth/AuthProvider";
+import {CreateRoleGuard} from "../auth/RoleGuard"
+import {allowedRole} from "../auth/isRoleAllowed"
+
+const userIsAllowed = allowedRole("user")
+const RoleGuardUser = CreateRoleGuard(userIsAllowed)
+const RoleGuardAdmin = CreateRoleGuard(allowedRole("admin"))
 
 export default function Dashboard() {
-  const router = useRouter();
-  const { user } = useAuth();
   return (
-    <>
-      <Head>
-        <title>Router guard: Dashboard page</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <PageLayout>
-        {user ? (
-          <>
-            <h1>This is PROTECTED DASHBOARD PAGE!</h1>
-            <h3>User: {user["idTokenClaims"]["name"]}</h3>
-            <button
-              onClick={() => {
-                router.push("/logout");
-              }}
-            >
-              Logout
-            </button>
-          </>
-        ) : (
-          <h1>401 - Protected</h1>
-        )}
-      </PageLayout>
-    </>
-  );
+  //...Other code here
+    <RoleGuardUser>
+      <h1>Content allowed for all users</h1>
+      <p>This content is allowed to all roles</p>
+    </RoleGuardUser>
+    <RoleGuardAdmin>
+      <h1>Content allowed for admin ONLY</h1>
+      <p>This content is allowed to admins ONLY</p>
+    </RoleGuardAdmin>
+  //...Other code here
 }
+
+
 ```
 
 ## Configuration

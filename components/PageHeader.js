@@ -12,7 +12,7 @@ export default function PageHeader(){
   ]
   return (
     <header className={styles.header}>
-      <h2>Header title</h2>
+      <h2>App Header</h2>
       <nav>
         {routes.map(route=>{
           if (route.href === pathname){

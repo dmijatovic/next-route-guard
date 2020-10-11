@@ -1,11 +1,11 @@
 import Head from 'next/head'
 import {useRouter} from 'next/router'
 import PageLayout from '../components/PageLayout'
-import {useAuth} from "../auth/AuthProvider"
+import {useAuthContext} from "../auth/RouteGuard"
 
 export default function Profile() {
   const router = useRouter()
-  const {user} = useAuth()
+  const {user} = useAuthContext()
   // console.log("Profile.user", user)
   return (
     <>
@@ -16,7 +16,7 @@ export default function Profile() {
     <PageLayout>
       {user?
         <>
-        <h1>This is PROTECTED PROFILE PAGE!</h1>
+        <h1>This is route PROTECTED PROFILE PAGE!</h1>
         <h3>User: {user['idTokenClaims']['name']}</h3>
         <button onClick={()=>{
           router.push("/logout")

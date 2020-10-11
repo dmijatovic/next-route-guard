@@ -1,27 +1,28 @@
 import Head from 'next/head'
-import {useRouter} from 'next/router'
 import PageLayout from '../components/PageLayout'
-import {useAuth} from "../auth/AuthProvider"
+
+import {CreateRoleGuard} from "../auth/RoleGuard"
+import {allowedRole} from "../auth/isRoleAllowed"
+
+const userIsAllowed = allowedRole("user")
+const RoleGuardUser = CreateRoleGuard(userIsAllowed)
+const RoleGuardAdmin = CreateRoleGuard(allowedRole("admin"))
 
 export default function Dashboard() {
-  const router = useRouter()
-  const {user} = useAuth()
   return (
     <>
     <Head>
-      <title>Router guard: Dashboard page</title>
-      <link rel="icon" href="/favicon.ico" />
+      <title>Role guard: Dashboard page</title>
     </Head>
     <PageLayout>
-      {user?
-        <>
-        <h1>This is PROTECTED DASHBOARD PAGE!</h1>
-        <h3>User: {user['idTokenClaims']['name']}</h3>
-        <button onClick={()=>{
-          router.push("/logout")
-        }}>Logout</button>
-        </>:<h1>401 - Protected</h1>
-      }
+      <RoleGuardUser>
+        <h1>Content allowed for all users</h1>
+        <p>This content is allowed to all roles</p>
+      </RoleGuardUser>
+      <RoleGuardAdmin>
+        <h1>Content allowed for admin ONLY</h1>
+        <p>This content is allowed to admins ONLY</p>
+      </RoleGuardAdmin>
     </PageLayout>
     </>
   )

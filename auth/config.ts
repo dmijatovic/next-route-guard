@@ -6,8 +6,6 @@
 export const msalConfig = {
   auth: {
     clientId:"0bb2e832-fe23-44d2-920e-120caf021a74",
-    // clientId: "71871e79-cdc1-41da-a74e-abbc39e6c26e",
-    // clientId: "0bb2e832-fe23-44d2-920e-120caf021a74",
     authority: "https://login.microsoftonline.com/0f22a838-ece9-49f4-b8dc-e71e2a5d705c",
     //common end point
     // authority: "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration",
@@ -15,13 +13,17 @@ export const msalConfig = {
     redirectUri: process.env.NEXT_PUBLIC_REDIRECT_URI,
   },
   cache: {
-    cacheLocation: "localStorage", // This configures where your cache will be stored
-    storeAuthStateInCookie: true // Set this to "true" to save cache in cookies to address trusted zones limitations in IE (see: https://github.com/AzureAD/microsoft-authentication-library-for-js/wiki/Known-issues-on-IE-and-Edge-Browser)
+    // This configures where your cache will be stored
+    cacheLocation: "localStorage",
+    // Set this to "true" to save cache in cookies to address trusted zones limitations in IE
+    //(see: https://github.com/AzureAD/microsoft-authentication-library-for-js/wiki/Known-issues-on-IE-and-Edge-Browser)
+    storeAuthStateInCookie: true
   }
 };
 
 /**
- * User scopes for this app. Passed during login process
+ * User scopes for this app. Passed during login process.
+ * These scopes need to be defined in Azure AD of client.
  */
 export const userConfig={
   state:`${JSON.stringify({

@@ -11,6 +11,7 @@ export default function About() {
     </Head>
     <PageLayout>
       <h1>This is ABOUT PAGE!</h1>
+      <p>This page is not protected</p>
     </PageLayout>
     </>
   )

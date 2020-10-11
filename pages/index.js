@@ -10,7 +10,8 @@ export default function Home() {
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <PageLayout>
-      <h1>This is test for main content!</h1>
+      <h1>This is main content of home page!</h1>
+      <p>This page is not protected</p>
     </PageLayout>
     </>
   )
