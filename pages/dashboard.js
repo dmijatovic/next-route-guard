@@ -1,12 +1,7 @@
 import Head from 'next/head'
 import PageLayout from '../components/PageLayout'
 
-import {CreateRoleGuard} from "../auth/RoleGuard"
-import {allowedRole} from "../auth/isRoleAllowed"
-
-const userIsAllowed = allowedRole("user")
-const RoleGuardUser = CreateRoleGuard(userIsAllowed)
-const RoleGuardAdmin = CreateRoleGuard(allowedRole("admin"))
+import {RoleBasedContent} from "../auth/RoleGuard"
 
 export default function Dashboard() {
   return (
@@ -15,14 +10,14 @@ export default function Dashboard() {
       <title>Role guard: Dashboard page</title>
     </Head>
     <PageLayout>
-      <RoleGuardUser>
+      <RoleBasedContent allowedRoles={["user"]}>
         <h1>Content allowed for all users</h1>
         <p>This content is allowed to all roles</p>
-      </RoleGuardUser>
-      <RoleGuardAdmin>
+      </RoleBasedContent>
+      <RoleBasedContent allowedRoles={["admin"]}>
         <h1>Content allowed for admin ONLY</h1>
         <p>This content is allowed to admins ONLY</p>
-      </RoleGuardAdmin>
+      </RoleBasedContent>
     </PageLayout>
     </>
   )

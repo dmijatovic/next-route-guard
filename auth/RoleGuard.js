@@ -1,5 +1,6 @@
 import {useState, useEffect } from 'react'
 import {useAuthContext} from './RouteGuard'
+import {tokenValid,roleIncluded} from "./tokenUtils"
 
 /**
  * Creates role guard react component. It receives isRoleAllowed method which
@@ -31,6 +32,30 @@ export function CreateRoleGuard(isRoleAllowed){
 
     return content
   }
+}
+
+export function RoleBasedContent({allowedRoles=[],children}){
+  const [content, setContent] = useState(null)
+    const {user} = useAuthContext()
+    // Check that user role is OK
+    function handleRBAC(user){
+      const {accessToken} = user
+      // check if token still valid
+      if (tokenValid(accessToken)==false){
+        setContent(null)
+      } else if (roleIncluded(accessToken,allowedRoles)){
+        //token is valid and
+        //user has at least one of allowed roles
+        setContent(children)
+      }else{
+        setContent(null)
+      }
+    }
+    useEffect(()=>{
+      handleRBAC(user)
+    },[user])
+
+    return content
 }
 
 // export default CreateRoleGuard

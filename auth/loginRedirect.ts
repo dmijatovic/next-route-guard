@@ -1,5 +1,5 @@
 import {msalConfig, userConfig} from './config'
-import logger, {LogType} from 'utils/logger'
+import logger, {LogType} from '../utils/logger'
 
 // NextJS workaround for SSR error "window is undefined" with msal-browser
 export let msalClient = undefined
