@@ -61,4 +61,48 @@ export function fetchApi(
     })
 }
 
+export function fetchUrl(
+  url:string,
+  access_token:string,
+  method:API_METHOD=API_METHOD.GET):Promise<ApiResponse>{
+  const headers = new Headers();
+
+  if (access_token){
+    // debugger
+    const bearer = `Bearer ${access_token}`;
+    headers.append("Authorization", bearer);
+  }
+
+  const options = {
+    method: method,
+    headers: headers
+  };
+
+  return fetch(url, options)
+    .then(resp=>{
+      //basic response check
+      if (resp.ok){
+        return resp.json()
+      } else {
+        const msg = `${resp.status}: ${resp.statusText}`
+        throw new Error(msg)
+      }
+    })
+    .then(data=>{
+      return {
+        payload:data,
+        error:undefined,
+        loading:false
+      }
+    })
+    .catch(e=>{
+      debugger
+      return {
+        payload:undefined,
+        error:e.message,
+        loading:false
+      }
+    })
+}
+
 export default fetchApi
