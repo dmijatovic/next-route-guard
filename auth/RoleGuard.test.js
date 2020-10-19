@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { RoleBasedContent } from './RoleGuard'
 
 jest.mock("./RouteGuard",()=>{
-  // console.log("RouteGuard...mock")
+  console.log("RouteGuard...mock")
   return{
     useAuthContext:()=>({
       user:{
@@ -24,8 +24,6 @@ const utils = jest.mock("./tokenUtils",()=>{
     }
   }
 })
-
-
 
 describe("RoleBasedContent",()=>{
   it.only("renders content",()=>{

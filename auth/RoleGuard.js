@@ -28,7 +28,7 @@ export function CreateRoleGuard(isRoleAllowed){
     }
     useEffect(()=>{
       handleRBAC(user)
-    },[user])
+    },[user,children])
 
     return content
   }
@@ -53,7 +53,7 @@ export function RoleBasedContent({allowedRoles=[],children}){
     }
     useEffect(()=>{
       handleRBAC(user)
-    },[user])
+    },[user,children])
 
     return content
 }
