@@ -9,6 +9,7 @@ export default function PageHeader(){
     {href:"/about",label:"About"},
     {href:"/profile",label:"Profile"},
     {href:"/dashboard",label:"Dashboard"},
+    {href:"/users",label:"Users"},
   ]
   return (
     <header className={styles.header}>
