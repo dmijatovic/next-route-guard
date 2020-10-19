@@ -31,6 +31,7 @@ export const userConfig={
   })}`,
   scopes:[
     "openid","profile","email",
+    // "User.Read.All",
     "api://0bb2e832-fe23-44d2-920e-120caf021a74/api.test.scope"
   ]
 }

@@ -4,6 +4,7 @@ export function tokenValid(token){
   try{
     const {exp} = jwt_decode(token)
     const nowInSec = Math.round(Date.now()/1000)
+    // debugger
     // allowed 60sec before expiration
     return nowInSec < (exp - 60)
   } catch (e){
@@ -15,6 +16,7 @@ export function tokenValid(token){
 export function roleIncluded(token, allowedRoles){
   try{
     const {roles} = jwt_decode(token)
+    // debugger
     if (Array.isArray(allowedRoles)){
       for (let pos in allowedRoles){
         const role = allowedRoles[pos]

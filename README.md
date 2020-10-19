@@ -55,28 +55,22 @@ export default function Dashboard() {
 Role guard component is implemented in dashboard page.
 
 ```javascript
-import {CreateRoleGuard} from "../auth/RoleGuard"
-import {allowedRole} from "../auth/isRoleAllowed"
-
-const userIsAllowed = allowedRole("user")
-const RoleGuardUser = CreateRoleGuard(userIsAllowed)
-const RoleGuardAdmin = CreateRoleGuard(allowedRole("admin"))
+import {RoleBasedContent} from "../auth/RoleGuard"
 
 export default function Dashboard() {
   return (
-  //...Other code here
-    <RoleGuardUser>
-      <h1>Content allowed for all users</h1>
-      <p>This content is allowed to all roles</p>
-    </RoleGuardUser>
-    <RoleGuardAdmin>
-      <h1>Content allowed for admin ONLY</h1>
-      <p>This content is allowed to admins ONLY</p>
-    </RoleGuardAdmin>
-  //...Other code here
+    //other code ...
+      <RoleBasedContent allowedRoles={["user"]}>
+        <h1>Content allowed for all users</h1>
+        <p>This content is allowed to all roles</p>
+      </RoleBasedContent>
+      <RoleBasedContent allowedRoles={["admin","user"]}>
+        <h1>Content allowed for admin ONLY</h1>
+        <p>This content is allowed to admins ONLY</p>
+      </RoleBasedContent>
+    //other code ...
+  )
 }
-
-
 ```
 
 ## Configuration
